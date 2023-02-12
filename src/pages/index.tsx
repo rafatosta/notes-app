@@ -20,14 +20,15 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <h1 className="text-3xl font-bold underline">Minhas notas</h1>
-        <div className="flex flex-col gap-4 ">
+      <nav className="fixed top-0">navbar</nav>
+      <main className="w-full h-screen flex flex-col gap-8 justify-center items-center text-gray-900 dark:text-gray-50">
+        <div className="flex flex-col gap-6 w-5/6 lg:w-1/2">
           {notes.map((note) => (
             <NoteCard title={note.title} content={note.content} />
           ))}
         </div>
       </main>
+      <footer className="fixed bottom-0">footer</footer>
     </>
   );
 }
