@@ -1,11 +1,15 @@
+import { Note } from "@/lib/notes";
 import Head from "next/head";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { NoteCard } from "../components/NoteCard";
 
 export default function Home() {
+  const [notes, setNotes] = useState<Note[]>([]);
+
   useEffect(() => {
     fetch("/api/notes")
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then((res) => setNotes(res.data));
   }, []);
 
   return (
@@ -17,7 +21,12 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <h1 className="text-3xl font-bold underline">Hello world!</h1>
+        <h1 className="text-3xl font-bold underline">Minhas notas</h1>
+        <div className="flex flex-col gap-4 ">
+          {notes.map((note) => (
+            <NoteCard title={note.title} content={note.content} />
+          ))}
+        </div>
       </main>
     </>
   );

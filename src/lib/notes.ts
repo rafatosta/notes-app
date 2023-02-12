@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
-type Note = {
-  id: number;
+export type Note = {
+  id?: number;
   title: string;
   content: string;
 };
