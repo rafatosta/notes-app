@@ -2,6 +2,7 @@ import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Note } from "@prisma/client";
 import { useForm } from "react-hook-form";
+import { api } from "@/services/api";
 
 function NavBar() {
   let [isOpen, setIsOpen] = useState(false);
@@ -22,10 +23,23 @@ function NavBar() {
   } = useForm<Note>();
 
   async function onFormSubmit(data: Note) {
-    console.log(data);
-    reset();
-    //alert(data)
-    closeModal();
+    try {
+      const response = await api.post<Note>(
+        "/api/notes",
+        JSON.stringify(data),
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      );
+      reset();
+      closeModal();
+      //alert("Nota adicionada com sucesso!");
+    } catch (error) {
+      alert(error);
+    }
   }
 
   return (
