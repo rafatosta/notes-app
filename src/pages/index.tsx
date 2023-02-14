@@ -3,26 +3,29 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import { NoteCard } from "../components/NoteCard";
 import NavBar from "../components/NavBar";
+import { useQuery } from "react-query";
+import { api } from "@/services/api";
 
 export default function Home() {
-  const [notes, setNotes] = useState<Note[]>([
-    { id: 1, title: "Title 1", content: "content 1" },
-    { id: 2, title: "Title 2", content: "content 1" },
-    { id: 3, title: "Title 3", content: "content 1" },
-    { id: 4, title: "Title 4", content: "content 1" },
-    { id: 5, title: "Title 5", content: "content 1" },
-    { id: 6, title: "Title 6", content: "content 1" },
-    { id: 7, title: "Title 7", content: "content 1" },
-    { id: 8, title: "Title 8", content: "content 1" },
-    { id: 9, title: "Title 9", content: "content 1" },
-    { id: 10, title: "Title 10", content: "content 1" },
-  ]);
+  const [notes, setNotes] = useState<Note[]>([]);
 
-  /* useEffect(() => {
-    fetch("/api/notes")
-      .then((response) => response.json())
-      .then((res) => setNotes(res.data));
-  }, []); */
+  const { isFetching, refetch } = useQuery(
+    "notes",
+    async () => {
+      const response = await api.get("api/notes");
+      setNotes(response.data.notes);
+    },
+    {
+      refetchOnWindowFocus: true,
+      staleTime: 0,
+      cacheTime: 0,
+      refetchInterval: 0,
+    }
+  );
+
+  useEffect(() => {
+    refetch();
+  }, [notes]);
 
   return (
     <>
@@ -35,7 +38,7 @@ export default function Home() {
       <NavBar />
       <main className="w-full h-screen flex flex-col gap-8 justify-start items-center text-gray-900 mt-20">
         <div className="flex flex-col gap-6 w-5/6 lg:w-1/2">
-          {notes.map((note) => (
+          {notes?.map((note) => (
             <NoteCard key={note.id} title={note.title} content={note.content} />
           ))}
         </div>

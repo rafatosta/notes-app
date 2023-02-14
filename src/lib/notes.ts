@@ -9,7 +9,13 @@ export type Note = {
 const prisma = new PrismaClient();
 
 export async function getNotes() {
-  const notes = await prisma.note.findMany();
+  const notes = await prisma.note.findMany({
+    orderBy: [
+      {
+        id: "desc",
+      },
+    ],
+  });
 
   return notes;
 }

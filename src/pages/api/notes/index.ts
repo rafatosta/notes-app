@@ -10,7 +10,7 @@ export default async function handler(
   if (method === "GET") {
     const notes = await getNotes();
     return res.status(200).json({
-      data: notes,
+      notes,
     });
   } else if (method === "POST") {
     const body = req.body;
