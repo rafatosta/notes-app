@@ -14,7 +14,6 @@ export default async function handler(
     });
   } else if (method === "POST") {
     const body = req.body;
-    console.log(body.title);
 
     try {
       const newEntry = await createNote(body);

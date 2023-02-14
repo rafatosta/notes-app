@@ -23,10 +23,6 @@ export default function Home() {
     }
   );
 
-  useEffect(() => {
-    refetch();
-  }, [notes]);
-
   return (
     <>
       <Head>
@@ -37,6 +33,7 @@ export default function Home() {
       </Head>
       <NavBar />
       <main className="w-full h-screen flex flex-col gap-8 justify-start items-center text-gray-900 mt-20">
+        {isFetching && <p>Carregando notas...</p>}
         <div className="flex flex-col gap-6 w-5/6 lg:w-1/2">
           {notes?.map((note) => (
             <NoteCard key={note.id} title={note.title} content={note.content} />

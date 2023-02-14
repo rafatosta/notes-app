@@ -3,6 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Note } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { api } from "@/services/api";
+import { queryClient } from "@/services/queryClient";
 
 function NavBar() {
   let [isOpen, setIsOpen] = useState(false);
@@ -36,6 +37,7 @@ function NavBar() {
       );
       reset();
       closeModal();
+      await queryClient.prefetchQuery({ queryKey: ["notes"] });
       //alert("Nota adicionada com sucesso!");
     } catch (error) {
       alert(error);
