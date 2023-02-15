@@ -1,14 +1,31 @@
+import { api } from "@/services/api";
 import { Note } from "../lib/notes";
+import { queryClient } from "@/services/queryClient";
 
+interface Data {
+  data: Note;
+}
 
-export function NoteCard(props: Note) {
+export function NoteCard(props: Data) {
+  async function deleteNote() {
+    try {
+      const response = await api.delete(`/api/notes/${props.data.id}`);
+      await queryClient.prefetchQuery({ queryKey: ["notes"] });
+    } catch (error) {
+      alert(error);
+    }
+  }
+
   return (
     <div className="flex flex-row border rounded-lg justify-between items-center shadow-xl hover:scale-105">
       <button className="w-full flex flex-col justify-center items-start p-6">
-        <p className="text-sm font-semibold">{props.title}</p>
-        <p className="text-md text-left">{props.content}</p>
+        <p className="text-sm font-semibold">{props.data.title}</p>
+        <p className="text-md text-left">{props.data.content}</p>
       </button>
-      <button className="text-gray-400 hover:text-blue-700 m-6 hover:scale-110">
+      <button
+        className="text-gray-400 hover:text-blue-700 m-6 hover:scale-110"
+        onClick={deleteNote}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

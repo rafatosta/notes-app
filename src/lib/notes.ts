@@ -30,3 +30,12 @@ export async function createNote(data: Note) {
 
   return newEntry;
 }
+
+export async function deleteNote(id: number) {
+  const delNote = await prisma.note.delete({
+    where: {
+      id: id,
+    },
+  });
+  return delNote;
+}
