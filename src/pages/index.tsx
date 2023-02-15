@@ -19,7 +19,7 @@ export default function Home() {
       refetchOnWindowFocus: true,
       staleTime: 0,
       cacheTime: 0,
-      refetchInterval: 0,
+      refetchInterval: 60*1000,
     }
   );
 
