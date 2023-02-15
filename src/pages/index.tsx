@@ -32,7 +32,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <NavBar />
-      <main className="w-full h-screen flex flex-col gap-8 justify-start items-center text-gray-900 mt-20">
+      <main className="w-full  flex flex-col gap-8 justify-start items-center text-gray-900 mt-20 mb-10">
         {isFetching && <p>Carregando notas...</p>}
 
         {notes.length == 0 && <p>A lista de notas está vazia!</p>}
