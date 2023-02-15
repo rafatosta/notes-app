@@ -9,7 +9,12 @@ interface Data {
 export function NoteCard(props: Data) {
   async function deleteNote() {
     try {
-      const response = await api.delete(`/api/notes/${props.data.id}`);
+      const response = await api.delete(`/api/notes/${props.data.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
       await queryClient.prefetchQuery({ queryKey: ["notes"] });
     } catch (error) {
       alert(error);
@@ -17,7 +22,7 @@ export function NoteCard(props: Data) {
   }
 
   return (
-    <div className="flex flex-row border rounded-lg justify-between items-center shadow-xl hover:scale-105">
+    <div className="flex flex-row border rounded-lg justify-between items-center hover:shadow-md active:bg-gray-50">
       <button className="w-full flex flex-col justify-center items-start p-6">
         <p className="text-sm font-semibold">{props.data.title}</p>
         <p className="text-md text-left">{props.data.content}</p>
