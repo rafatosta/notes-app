@@ -1,6 +1,6 @@
 import { Note } from "@/lib/notes";
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { NoteCard } from "../components/NoteCard";
 import NavBar from "../components/NavBar";
 import { useQuery } from "react-query";
@@ -9,7 +9,7 @@ import { api } from "@/services/api";
 export default function Home() {
   const [notes, setNotes] = useState<Note[]>([]);
 
-  const { isFetching, refetch } = useQuery(
+  const { isFetching } = useQuery(
     "notes",
     async () => {
       const response = await api.get("api/notes");
