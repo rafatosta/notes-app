@@ -19,7 +19,7 @@ export default function Home() {
       refetchOnWindowFocus: true,
       staleTime: 0,
       cacheTime: 0,
-      refetchInterval: 60*1000,
+      refetchInterval: 60 * 1000,
     }
   );
 
@@ -34,14 +34,17 @@ export default function Home() {
       <NavBar />
       <main className="w-full h-screen flex flex-col gap-8 justify-start items-center text-gray-900 mt-20">
         {isFetching && <p>Carregando notas...</p>}
+
+        {notes.length == 0 && <p>A lista de notas está vazia!</p>}
+
         <div className="flex flex-col gap-6 w-5/6 lg:w-1/2">
           {notes?.map((note) => (
             <NoteCard key={note.id} data={note} />
           ))}
         </div>
       </main>
-      <footer className="fixed bottom-0 w-full h-6 flex flex-row justify-center items-center bg-black/5 p-4 ">
-        footer
+      <footer className="bg-[#24292f] text-white text-sm fixed font-semibold bottom-0 w-full h-4 flex flex-row justify-center items-center p-4 ">
+        {notes.length} {notes.length > 1 ? "notas" : "nota"} no total
       </footer>
     </>
   );
