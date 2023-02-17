@@ -1,10 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 
-export type Note = {
+export interface Note {
   id?: number;
   title: string;
   content: string;
-};
+}
 
 const prisma = new PrismaClient();
 
@@ -29,6 +29,20 @@ export async function createNote(data: Note) {
   });
 
   return newEntry;
+}
+
+export async function updateNote(data: Note) {
+  const updateNote = await prisma.note.update({
+    where: {
+      id: data.id,
+    },
+    data: {
+      title: data.title,
+      content: data.content,
+    },
+  });
+
+  return updateNote;
 }
 
 export async function deleteNote(id: number) {

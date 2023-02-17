@@ -1,11 +1,15 @@
-import { Note } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { api } from "@/services/api";
 import { queryClient } from "@/services/queryClient";
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { Note } from "@/lib/notes";
 
-function NoteDialog() {
+interface PropsDialog {
+  data?: Note;
+}
+
+function NoteDialog(props: PropsDialog) {
   let [isOpen, setIsOpen] = useState(false);
 
   function closeModal() {
@@ -21,49 +25,88 @@ function NoteDialog() {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<Note>();
+  } = useForm<Note>({
+    defaultValues: {
+      id: props.data?.id,
+      title: props.data?.title,
+      content: props.data?.content,
+    },
+  });
 
   async function onFormSubmit(data: Note) {
     try {
-      const response = await api.post<Note>(
-        "/api/notes",
-        JSON.stringify(data),
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        }
-      );
+      if (!props.data?.id) {
+        createNote(data);
+      } else {
+        updateNote(data);
+      }
       reset();
       closeModal();
       await queryClient.prefetchQuery({ queryKey: ["notes"] });
-      //alert("Nota adicionada com sucesso!");
     } catch (error) {
       alert(error);
     }
   }
 
-  return (
-    <button
-      className="w-full flex flex-row items-center justify-center gap-2 rounded-md bg-[#2da44e] hover:bg-[#308d4a] active:bg-[#2a6b3c] text-white font-semibold p-2 px-8"
-      onClick={openModal}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth="1.5"
-        stroke="currentColor"
-        className="w-6 h-6"
+  async function createNote(data: Note) {
+    await api.post<Note>("/api/notes", JSON.stringify(data), {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+  }
+
+  async function updateNote(data: Note) {
+    await api.put<Note>("/api/notes", JSON.stringify(data), {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+  }
+
+  const NewNoteButton = () => {
+    return (
+      <button
+        className="w-full flex flex-row items-center justify-center gap-2 rounded-md bg-[#2da44e] hover:bg-[#308d4a] active:bg-[#2a6b3c] text-white font-semibold p-2 px-8"
+        onClick={openModal}
       >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-        />
-      </svg>
-      <p> Nova nota</p>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth="1.5"
+          stroke="currentColor"
+          className="w-6 h-6"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+          />
+        </svg>
+        <p> Nova nota</p>
+      </button>
+    );
+  };
+
+  const UpdateNoteButton = () => {
+    return (
+      <button
+        className="w-full flex flex-col justify-center items-start p-4 px-6"
+        onClick={openModal}
+      >
+        <p className="text-[10px] italic text-gray-500">#{props.data?.id}</p>
+        <p className="text-md font-semibold">{props.data?.title}</p>
+        <p className="text-md text-left">{props.data?.content}</p>
+      </button>
+    );
+  };
+
+  return (
+    <>
+      {props.data ? <UpdateNoteButton /> : <NewNoteButton />}
 
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -157,7 +200,7 @@ function NoteDialog() {
           </div>
         </Dialog>
       </Transition>
-    </button>
+    </>
   );
 }
 

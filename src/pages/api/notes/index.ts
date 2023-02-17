@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getNotes, createNote } from "../../../lib/notes";
+import { getNotes, createNote, updateNote } from "../../../lib/notes";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,7 +20,20 @@ export default async function handler(
       return res.status(200).json({ success: true, data: newEntry });
     } catch (error) {
       console.error("Request error", error);
-      res.status(500).json({ error: "Error creating note", success: false });
+      return res
+        .status(500)
+        .json({ error: "Error creating note", success: false });
+    }
+  } else if (method === "PUT") {
+    const body = req.body;
+    try {
+      const updateEntry = await updateNote(body);
+      return res.status(200).json({ success: true, data: updateEntry });
+    } catch (error) {
+      console.error("Request error", error);
+      return res
+        .status(500)
+        .json({ error: "Error update note", success: false });
     }
   }
 

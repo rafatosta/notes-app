@@ -1,6 +1,7 @@
 import { api } from "@/services/api";
-import { Note } from "../lib/notes";
+import { Note } from "@/lib/notes";
 import { queryClient } from "@/services/queryClient";
+import NoteDialog from "@/components/NoteDialog";
 
 interface Data {
   data: Note;
@@ -23,10 +24,8 @@ export function NoteCard(props: Data) {
 
   return (
     <div className="flex flex-row border rounded-lg justify-between items-center hover:shadow-md active:bg-gray-50 ease-in duration-150">
-      <button className="w-full flex flex-col justify-center items-start p-6">
-        <p className="text-md font-semibold">{props.data.title}</p>
-        <p className="text-md text-left">{props.data.content}</p>
-      </button>
+      <NoteDialog data={props.data} />
+
       <button
         className="text-gray-400 hover:text-blue-700 m-6 hover:scale-110"
         onClick={deleteNote}
