@@ -37,10 +37,10 @@ function NoteDialog(props: PropsDialog) {
     try {
       if (!props.data?.id) {
         createNote(data);
+        reset();
       } else {
         updateNote(data);
       }
-      reset();
       closeModal();
       await queryClient.prefetchQuery({ queryKey: ["notes"] });
     } catch (error) {
